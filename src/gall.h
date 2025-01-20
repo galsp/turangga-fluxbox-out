@@ -45,7 +45,7 @@ void printSensor()
         if (millis() - millise1 > 200 && detected == false)
         {
             detected = true;
-            Serial.println("detected");
+            Serial.println("{ \"ultrasonik\" : true }");
         }
     }
     else if (sensore > 100)
@@ -54,7 +54,7 @@ void printSensor()
         if (millis() - millise2 > 1500 && detected == true)
         {
             detected = false;
-            Serial.println("not detected");
+            Serial.println("{ \"ultrasonik\" : false }");
         }
     }
 }
@@ -67,7 +67,7 @@ void errRelay()
         if (millis() - delayR1 > 500 && status1 == true)
         {
             status1 = false;
-            Serial.println("Relay1:1");
+            Serial.println("{ \"pb1\" : true }");
         }
     }
     else
@@ -75,7 +75,7 @@ void errRelay()
         if (status1 == false)
         {
             status1 = true;
-            Serial.println("Relay1:0");
+            Serial.println("{ \"pb1\" : false }");
         }
         delayR1 = millis();
     }
@@ -85,7 +85,7 @@ void errRelay()
         if (millis() - delayR2 > 500 && status2 == true)
         {
             status2 = false;
-            Serial.println("Relay2:1");
+            Serial.println("{ \"pb2\" : true }");
         }
     }
     else
@@ -93,7 +93,7 @@ void errRelay()
         if (status2 == false)
         {
             status2 = true;
-            Serial.println("Relay2:0");
+            Serial.println("{ \"pb2\" : false }");
         }
         delayR2 = millis();
     }
@@ -103,7 +103,7 @@ void errRelay()
         if (millis() - delayR3 > 500 && status3 == true)
         {
             status3 = false;
-            Serial.println("Relay3:1");
+            Serial.println("{ \"pb3\" : true }");
         }
     }
     else
@@ -111,7 +111,7 @@ void errRelay()
         if (status3 == false)
         {
             status3 = true;
-            Serial.println("Relay3:0");
+            Serial.println("{ \"pb3\" : false }");
         }
         delayR3 = millis();
     }
@@ -121,7 +121,7 @@ void errRelay()
         if (millis() - delayR4 > 500 && status4 == true)
         {
             status4 = false;
-            Serial.println("Relay4:1");
+            Serial.println("{ \"pb4\" : true }");
         }
     }
     else
@@ -129,7 +129,7 @@ void errRelay()
         if (status4 == false)
         {
             status4 = true;
-            Serial.println("Relay4:0");
+            Serial.println("{ \"pb4\" : false }");
         }
         delayR4 = millis();
     }
@@ -137,8 +137,32 @@ void errRelay()
 
 void printping()
 {
-    Serial.println("ping");
-    Serial.print("Jarak: ");
+    unsigned long millise = millis();
+    int sensore = sonar.ping_cm();
+    String statusPing = "false";
+    String feedback;
+    // Serial.println("ping");
+    // Serial.print("Jarak: ");
+    // feedback = Serial2.readString();
+    if (Serial2.availableForWrite() > 0)
+    {
+        Serial2.print("(ping)");
+    }
+    while (Serial2.available() == 0)
+    {
+        if (millis() - millise > 5000)
+        {
+            statusPing = "false";
+            Serial.println("{ \"jarak\" : " + (String)sensore + ", \"status\" : " + statusPing + " }");
+            return;
+        }
+    }
+    feedback = Serial2.readString();
+
+    if (feedback.indexOf("Matrix") != -1)
+    {
+        statusPing = "true";
+    }
+    Serial.println("{ \"jarak\" : " + (String)sensore + ", \"status\" : " + statusPing + " }");
     delay(50);
-    Serial.println(sonar.ping_cm());
 }
