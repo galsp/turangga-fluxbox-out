@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "gall.h"
+#include <errOTA.h>
 
 void setup()
 {
