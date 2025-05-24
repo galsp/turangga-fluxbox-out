@@ -7,11 +7,14 @@ void setup()
   Serial.begin(9600);
   Serial2.begin(9600);
   setup2();
+  setupOTA();
 }
 
 void loop()
 {
-
+  
+  server.handleClient();
+  ElegantOTA.loop();
   if (Serial.available())
   {
     byte bufer[64];
