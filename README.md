@@ -12,6 +12,7 @@
  `(B, 10)` -> set brightness 0 - 255
 
  `ping` -> ping to fluxbox 4
+ `(S,WL)` -> set WL to static
 
 
 ----
